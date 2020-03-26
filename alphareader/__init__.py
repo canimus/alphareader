@@ -1,7 +1,5 @@
 import io
 import codecs
-from types import (FunctionType, LambdaType)
-from typing import List
 from functools import reduce
 
 def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_transform):
@@ -13,10 +11,10 @@ def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_trans
         raise TypeError('File handle should be a reference to `open(file, r) or open(file, rb) function')
 
     if fn_transform:
-        if isinstance(fn_transform, List):
-            if not all(map(lambda f: isinstance(f, FunctionType) or isinstance(f, LambdaType), fn_transform)):
+        if isinstance(fn_transform, list):
+            if not all(map(lambda f: callable(f), fn_transform)):
                 raise TypeError('Excepted all transformations to be functions')
-        elif not isinstance(fn_transform, FunctionType) or not isinstance(fn_transform, LambdaType):
+        elif not callable(fn_transform):
             raise TypeError('Transformation parameter should be a function or lambda i.e. fn = lambda x: x.replace(a,b)')
 
     try:
