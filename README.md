@@ -98,3 +98,6 @@ It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
 > reader = AlphaReader(open('large_file.xsv', 'rb'), encoding='cp1252', terminator=172, delimiter=173)
 > records = list(reader) # Avoid this as it will load all file in memory
 ```
+
+> Limitations:
+> As described by @eesmith in `Hacker News`. The multi-byte separators are not handled correctly. For this it will be necessary to confirm if the chunks split in the middle of the multi-byte character used to separate columns. This will introduce a performance impact in the library. Suggestions for a solution are welcomed.
