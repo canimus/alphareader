@@ -1,2 +1,2 @@
-./alphareader
+alphareader
 pytest
