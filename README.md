@@ -1,5 +1,5 @@
 # AlphaReader
-
+[![canimus](https://circleci.com/gh/canimus/alphareader.svg?style=svg)](https://circleci.com/gh/canimus/alphareader)
 After several attempts to try the `csv` package or `pandas` for reading large files with custome delimiters, I ended up writting a little program that does the job without complaints.
 
 __AlphaReader__ is a high performant, pure python, 15-line of code library, that reads chunks of bytes from your files, and retrieve line by line, the content of it.
@@ -7,8 +7,6 @@ __AlphaReader__ is a high performant, pure python, 15-line of code library, that
 The inspiration of this library came by having to extract data from a MS-SQL Server database, and having to deal with the `CP1252` encoding. By default AlphaReader takes this encoding as it was useful in our use case.
 
 It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
-
-[![canimus](https://circleci.com/gh/canimus/alphareader.svg?style=svg)](https://circleci.com/gh/canimus/alphareader)
 
 ## CSVs
 ```python
