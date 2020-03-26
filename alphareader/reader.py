@@ -1,9 +1,10 @@
 import io
 import codecs
-import types import (FunctionType, LambdaType)
-import typing import List
+from types import (FunctionType, LambdaType)
+from typing import List
+from functools import reduce
 
-def _validate(chunk_size, delimiter, terminator, encoding, fn_transform):
+def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_transform):
     '''Prevalidations of the AlphaReader function'''
     # Validations
     codecs.lookup(encoding)
@@ -15,7 +16,7 @@ def _validate(chunk_size, delimiter, terminator, encoding, fn_transform):
         if isinstance(fn_transform, List):
             if not all(map(lambda f: isinstance(f, FunctionType) or isinstance(f, LambdaType), fn_transform)):
                 raise TypeError('Excepted all transformations to be functions')
-        elif not isinstance(FunctionType) or not isinstance(LambdaType):
+        elif not isinstance(fn_transform, FunctionType) or not isinstance(fn_transform, LambdaType):
             raise TypeError('Transformation parameter should be a function or lambda i.e. fn = lambda x: x.replace(a,b)')
 
     try:
@@ -45,7 +46,7 @@ def AlphaReader(file_handle, chunk_size=512, delimiter=171, terminator=172, enco
     Returns:
         generator: A generator that contains a List[String] types
     """
-    _validate(chunk_size, delimiter, terminator, encoding, fn_transform)
+    _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_transform)
 
     # Reading routine
     chunk = ""
@@ -60,6 +61,11 @@ def AlphaReader(file_handle, chunk_size=512, delimiter=171, terminator=172, enco
             lines = chunk.split(chr(terminator))
             for line in lines[0:-1]:
                 columns = line.split(chr(delimiter))
-                if fn_transform: yield list(map(fn_transform, columns))
+                if fn_transform: 
+                    try:
+                        transformations = iter(fn_transform)
+                        yield list(map(lambda x: reduce(lambda a,b: b(a), fn_transform, x), columns))
+                    except TypeError:
+                        yield list(map(fn_transform, columns))
                 else: yield columns
             chunk = lines[-1]
