@@ -8,6 +8,8 @@ The inspiration of this library came by having to extract data from a MS-SQL Ser
 
 It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
 
+[![canimus](https://circleci.com/gh/canimus/alphareader.svg?style=svg)](https://circleci.com/gh/canimus/alphareader)
+
 ## CSVs
 ```python
 # !cat file.csv
