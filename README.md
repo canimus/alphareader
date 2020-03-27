@@ -71,12 +71,12 @@ It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
 # 10,20,30
 # 100,200,300
 
-> fn = lambda x: x+1
+> fn = lambda x: int(x)
 > reader = AlphaReader(open('/raw/tsv/file.tsv', 'rb'), encoding='cp1252', terminator=10, delimiter=44, fn_transform=fn)
 > next(reader)
-> [2,3,4]
+> [1,2,3]
 > next(reader)
-> [11,21,31]
+> [10,20,30]
 ```
 
 ## Chain Transformations
@@ -88,7 +88,7 @@ It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
 
 > fn_1 = lambda x: x+1
 > fn_2 = lambda x: x*10
-> reader = AlphaReader(open('/raw/tsv/file.tsv', 'rb'), encoding='cp1252', terminator=10, delimiter=44, fn_transform=[fn_1, fn_2])
+> reader = AlphaReader(open('/raw/tsv/file.tsv', 'rb'), encoding='cp1252', terminator=10, delimiter=44, fn_transform=[int, fn_1, fn_2])
 > next(reader)
 > [20,30,40]
 > next(reader)

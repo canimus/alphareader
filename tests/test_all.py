@@ -1,16 +1,23 @@
 from alphareader import AlphaReader
-from io import StringIO
-import typing
-import types
 from pathlib import Path
 import logging
-from functools import reduce
+import pytest
+
+
 parent = Path(__file__).parent
 
 logger = logging.getLogger()
+def test_iterator():
+    reader = AlphaReader(open(parent / 'fixtures' / 'file.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8')
+    assert hasattr(reader, '__iter__')
+
+def test_generator():
+    reader = AlphaReader(open(parent / 'fixtures' / 'file.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8')
+    assert hasattr(reader, '__next__')
+
 def test_instance():
     reader = AlphaReader(open(parent / 'fixtures' / 'file.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8')
-    assert isinstance(next(reader), typing.List)
+    assert isinstance(next(reader), list)
 
 def test_records():
     reader = AlphaReader(open(parent / 'fixtures' / 'file.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8')
@@ -37,9 +44,18 @@ def test_fn_chain():
 
 def test_fn_chain():
     fn1 = lambda x: x.strip()
-    fn2 = lambda x: int(x)
     fn3 = lambda x: x*10
-    reader = AlphaReader(open(parent / 'fixtures' / 'nums.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8', fn_transform=[fn1, fn2, fn3])
+    reader = AlphaReader(open(parent / 'fixtures' / 'nums.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8', fn_transform=[fn1, int, fn3])
     assert sum(next(reader)) == 60
     assert sum(next(reader)) == 600
     assert sum(next(reader)) == 6000
+
+def test_list():
+    reader = AlphaReader(open(parent / 'fixtures' / 'nums.csv', 'rb'), terminator=10, delimiter=44, encoding='UTF-8', fn_transform=[lambda x: x.strip(), int])
+    n = list(reader)
+    assert len(n) == 3
+
+def test_multibyte():    
+    reader = AlphaReader(open(parent / 'fixtures' / 'nums.csv', 'rb'), terminator=10, delimiter=198, encoding='UTF-8', fn_transform=[lambda x: x.strip(), int])
+    with pytest.raises(ValueError):
+        next(reader)
