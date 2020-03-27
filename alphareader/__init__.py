@@ -3,7 +3,7 @@ import codecs
 from functools import reduce
 
 def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_transform):
-    '''Prevalidations of the AlphaReader function'''
+    '''Prevalidations of the AlphaReader'''
 
     is_list = False
 
@@ -37,7 +37,8 @@ def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_trans
 
 
 def AlphaReader(file_handle, chunk_size=512, delimiter=171, terminator=172, encoding='cp1252', fn_transform=None):
-    """A pure python file reader with custom delimiters and infinite size.
+    '''
+    A pure python file reader with custom delimiters and infinite size.
 
     Args:
         file_handle (io.BufferedReader): A file handle. Reference to open(file_name).
@@ -49,7 +50,7 @@ def AlphaReader(file_handle, chunk_size=512, delimiter=171, terminator=172, enco
 
     Returns:
         generator: A generator that contains a List[String] types
-    """
+    '''
     
     c_terminator = chr(terminator)
     c_delimiter  = chr(delimiter)
