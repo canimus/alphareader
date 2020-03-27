@@ -4,10 +4,12 @@ from alphareader import AlphaReader
 from pathlib import Path
 import logging
 import csv
+import pytest
 
 parent = Path(__file__).parent
 logger = logging.getLogger()
 
+@pytest.mark.skip(reason='Local file')
 def test_alphareader_with_encoding():
     with open(parent / 'fixtures' / 'large.dat', 'rb') as infile:
         pr = cProfile.Profile()
@@ -21,6 +23,7 @@ def test_alphareader_with_encoding():
         ps.print_stats()
         logger.info(s.getvalue())
 
+@pytest.mark.skip(reason='Local file')
 def test_native_csv():
     with open(str(parent / 'fixtures' / 'xx-large.dat'), newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter='|')
