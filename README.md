@@ -95,11 +95,34 @@ It works also with `HDFS` through the `pyarrow` library. But is not a depedency.
 > [110,210,310]
 ```
 
-## __Caution__ with large files
+## Caution
 ```python
 > reader = AlphaReader(open('large_file.xsv', 'rb'), encoding='cp1252', terminator=172, delimiter=173)
 > records = list(reader) # Avoid this as it will load all file in memory
 ```
 
-> Limitations:
-> As described by @eesmith in `Hacker News`. The multi-byte separators are not handled correctly. For this it will be necessary to confirm if the chunks split in the middle of the multi-byte character used to separate columns. This will introduce a performance impact in the library. Suggestions for a solution are welcomed.
+## Limitations
+- No support for `multi-byte` delimiters
+- Relatively slower performance than `csv` library. Use `csv` and dialects when your files have `\r\n` terminators
+- Transformations are per row, perhaps vectorization could aid performance
+
+## Performance
+- 24MB file loaded with `list(AlphaReader(file_handle))`
+```bash
+tests/test_profile.py::test_alphareader_with_encoding
+--------------------------------------------------------------------------------- live log call 
+INFO     root:test_profile.py:22          252343 function calls in 0.386 seconds
+
+    Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   119605    0.039    0.000    0.386    0.000 .\alphareader\__init__.py:39(AlphaReader)
+   122228    0.266    0.000    0.266    0.000 {method 'split' of 'str' objects}
+     2625    0.005    0.000    0.054    0.000 {method 'decode' of 'bytes' objects}
+     2624    0.001    0.000    0.049    0.000 .\Python-3.7.4\lib\encodings\cp1252.py:14(decode)
+     2624    0.048    0.000    0.048    0.000 {built-in method _codecs.charmap_decode}
+     2625    0.027    0.000    0.027    0.000 {method 'read' of '_io.BufferedReader' objects}
+        1    0.000    0.000    0.000    0.000 .\__init__.py:5(_validate)
+        1    0.000    0.000    0.000    0.000 {built-in method _codecs.lookup}
+
+```
