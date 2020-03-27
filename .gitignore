@@ -5,3 +5,5 @@
 build/
 dist/
 *-info/
+tests/fixtures/x*
+tests/fixtures/large*

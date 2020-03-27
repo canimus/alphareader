@@ -36,7 +36,7 @@ def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_trans
     return is_list
 
 
-def AlphaReader(file_handle, chunk_size=512, delimiter=171, terminator=172, encoding='cp1252', fn_transform=None):
+def AlphaReader(file_handle, chunk_size=8*1024, delimiter=171, terminator=172, encoding='cp1252', fn_transform=None):
     '''
     A pure python file reader with custom delimiters and infinite size.
 
