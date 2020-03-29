@@ -1,6 +1,7 @@
 import io
 import codecs
-from functools import reduce
+from functools import reduce, partial
+import os
 
 def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_transform):
     '''Prevalidations of the AlphaReader'''
@@ -34,7 +35,6 @@ def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_trans
         raise UnicodeError(f'Column delimiter character chr({delimiter}) not found in {encoding}')
 
     return is_list
-
 
 def AlphaReader(file_handle, chunk_size=8*1024, delimiter=171, terminator=172, encoding='cp1252', fn_transform=None):
     '''
@@ -79,3 +79,30 @@ def AlphaReader(file_handle, chunk_size=8*1024, delimiter=171, terminator=172, e
                         yield list(map(fn_transform, columns))
                 else: yield columns
             chunk = lines[-1]
+
+def AlphaWriter(file_name, alpha_reader, delimiter=171, terminator=172, encoding='cp1252'):
+    '''
+    A pure python file writer with custom delimiters and infinite size.
+
+    Args:
+        file_name (str): The name of your new alpha file
+        alpha_reader (AlphaReader,generator): An iterable, or AlphaReader that has lists of lists with your records.
+        delimiter (int): Character code to use for column delimiter.
+        terminator (int): Character code to use for line terminator.
+        encoding (str): Codec of the file.
+
+    Returns:
+        int: number of bytes writen on disk, or -1 in the event of not existing path
+    '''
+    wb = partial(bytes, encoding=encoding)
+    sep = chr(delimiter)
+    ter = chr(terminator)
+    with open(file_name, 'wb') as outfile:
+        for record in alpha_reader:
+            outfile.write(wb(sep.join(record)))
+            outfile.write(wb(ter))
+    
+    if os.path.exists(file_name):
+        return os.path.getsize(file_name)
+    else:
+        -1

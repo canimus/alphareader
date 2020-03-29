@@ -1,8 +1,8 @@
-from alphareader import AlphaReader
+from alphareader import AlphaReader,AlphaWriter
 from pathlib import Path
 import logging
 import pytest
-
+import os
 
 parent = Path(__file__).parent
 
@@ -59,3 +59,9 @@ def test_multibyte():
     reader = AlphaReader(open(parent / 'fixtures' / 'nums.csv', 'rb'), terminator=10, delimiter=198, encoding='UTF-8', fn_transform=[lambda x: x.strip(), int])
     with pytest.raises(ValueError):
         next(reader)
+
+def test_writer():
+    reader = AlphaReader(open(parent / 'fixtures' / 'x-large.dat', "rb"))
+    total_size = AlphaWriter(str(parent / 'fixtures' / 'x-large-copy.dat'), reader)
+    assert os.path.exists(str(parent / 'fixtures' / 'x-large-copy.dat'))
+    assert total_size == os.path.getsize(parent / 'fixtures' / 'x-large.dat')
