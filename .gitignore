@@ -7,3 +7,4 @@ dist/
 *-info/
 tests/fixtures/x*
 tests/fixtures/large*
+tests/fixtures/alpha-copy.dat

@@ -61,7 +61,7 @@ def test_multibyte():
         next(reader)
 
 def test_writer():
-    reader = AlphaReader(open(parent / 'fixtures' / 'x-large.dat', "rb"))
-    total_size = AlphaWriter(str(parent / 'fixtures' / 'x-large-copy.dat'), reader)
-    assert os.path.exists(str(parent / 'fixtures' / 'x-large-copy.dat'))
-    assert total_size == os.path.getsize(parent / 'fixtures' / 'x-large.dat')
+    reader = AlphaReader(open(parent / 'fixtures' / 'alpha.dat', "rb"))
+    total_size = AlphaWriter(str(parent / 'fixtures' / 'alpha-copy.dat'), reader)
+    assert os.path.exists(str(parent / 'fixtures' / 'alpha-copy.dat'))
+    assert total_size == os.path.getsize(parent / 'fixtures' / 'alpha.dat')
