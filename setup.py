@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="alphareader", # Replace with your own username
-    version="0.0.6",
+    version="0.0.7",
     author="Herminio Vazquez",
     author_email="canimus@gmail.com",
     description="A reader for large files with custom delimiters and encodings",

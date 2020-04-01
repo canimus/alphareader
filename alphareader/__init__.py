@@ -10,9 +10,9 @@ def _validate(file_handle, chunk_size, delimiter, terminator, encoding, fn_trans
 
     # Validations
     codecs.lookup(encoding)
-    
-    if not isinstance(file_handle, io.BufferedReader):
-        raise TypeError('File handle should be a reference to `open(file, r) or open(file, rb) function')
+
+    if 'read' not in dir(file_handle):
+        raise TypeError('File handle should be a reference a readable binary stream')
 
     if fn_transform:
         if isinstance(fn_transform, list):
